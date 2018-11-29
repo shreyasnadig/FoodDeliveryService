@@ -1,0 +1,125 @@
+CREATE SEQUENCE IdSeq
+  START WITH 1
+  INCREMENT BY 1
+  CACHE 100000;
+
+-- create trigger using the sequence
+CREATE OR REPLACE TRIGGER seq_trg 
+BEFORE INSERT ON tablename 
+FOR EACH ROW
+WHEN (new.ID IS NULL)
+BEGIN
+  SELECT Idseq.NEXTVAL
+  INTO   :new.ID
+  FROM   dual;
+END;
+
+create or replace procedure "FREEDRIVER"    
+(name IN varchar2)    
+is    
+begin    
+update drivers set d_status=0 where d_name=name;    
+end;    
+/ 
+
+        String sql="insert into customer values('"+cid+"','"+Long.parseLong(cphno)+"','"+status+"','"+door+"','"+lane+"','"+area+"','"+Integer.parseInt(pin)+"','"+uname+"','"+pswd+"','"+fname+"','"+lname+"','"+email+"')";
+        
+
+create table customers(cid number(38),cphno number(10) check (cphno between 1000000000 and 9999999999),
+status varchar2(1),door varchar2(100),lane varchar2(150),area varchar2(100),pin number(6),uname varchar2(50),
+pswd varchar2(50),fname varchar2(50),lname varchar2(50),email varchar2(50)); 
+
+create table restaurant (
+r_id number(38),r_name varchar2(100),r_phno number(10),status number(1) default 1,r_zone varchar2(10),constraint pk1 primary key(r_id));
+
+
+CREATE SEQUENCE CusIdSeq
+  START WITH 1
+  INCREMENT BY 1
+  CACHE 100000;
+
+CREATE OR REPLACE TRIGGER CusIdSeq_trg 
+BEFORE INSERT ON customers 
+FOR EACH ROW
+
+BEGIN
+  SELECT cusIdseq.NEXTVAL
+  INTO   :new.cID
+  FROM   dual;
+END;
+
+
+
+CREATE SEQUENCE ResIdSeq
+  START WITH 1
+  INCREMENT BY 1
+  CACHE 100000;
+
+CREATE OR REPLACE TRIGGER ResIdSeq_trg 
+BEFORE INSERT ON restaurant 
+FOR EACH ROW
+
+BEGIN
+  SELECT ResIdseq.NEXTVAL
+  INTO   :new.r_ID
+  FROM   dual;
+END;
+
+
+
+create table items(i_id number(37),i_name varchar2(50),constraint pk1 primary key(i_id));
+
+CREATE SEQUENCE itemsIdSeq
+  START WITH 1
+  INCREMENT BY 1
+  CACHE 100000;
+
+CREATE OR REPLACE TRIGGER itemsIdSeq_trg 
+BEFORE INSERT ON items 
+FOR EACH ROW
+
+BEGIN
+  SELECT itemsIdseq.NEXTVAL
+  INTO   :new.i_ID
+  FROM   dual;
+END;
+
+create table rest_has_items(r_id number(38),i_id number(37),price number(5),primary key(i_id,r_id),
+foreign key(r_id)references restaurant(r_id),foreign key(i_id)references items(i_id));
+
+
+create table drivers (
+d_id number(38),d_name varchar2(100),d_phno number(10),d_status number(1) default 1,d_zone varchar2(10),primary key(d_id));
+
+CREATE SEQUENCE DIdSeq
+  START WITH 1
+  INCREMENT BY 1
+  CACHE 100000;
+
+CREATE OR REPLACE TRIGGER DIdSeq_trg 
+BEFORE INSERT ON drivers
+FOR EACH ROW
+
+BEGIN
+  SELECT DIdseq.NEXTVAL
+  INTO   :new.D_ID
+  FROM   dual;
+END;
+
+
+create table orders(o_id number(38),r_id number(38),cid number(38),o_price number(10),primary key(o_id),foreign key(r_id)references restaurant(r_id),foreign key(cid)references customers(cid));
+
+CREATE SEQUENCE OIdSeq
+  START WITH 1
+  INCREMENT BY 1
+  CACHE 100000;
+
+CREATE OR REPLACE TRIGGER OIdSeq_trg 
+BEFORE INSERT ON orders
+FOR EACH ROW
+
+BEGIN
+  SELECT OIdseq.NEXTVAL
+  INTO   :new.O_ID
+  FROM   dual;
+END;
